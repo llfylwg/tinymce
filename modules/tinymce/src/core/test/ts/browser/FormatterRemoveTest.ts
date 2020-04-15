@@ -488,6 +488,30 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
   });
 
+  suite.test('Inline element on selected text with preserve_attributes flag 1', function (editor) {
+    editor.focus();
+    editor.formatter.register('format', { inline: 'b', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
+    editor.getBody().innerHTML = '<p><b class="abc" style="color: red;" data-test="1">1234</b></p>';
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+    editor.selection.setRng(rng);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(getContent(editor), '<p><span style="color: red;" class="abc">1234</span></p>', 'Inline element on selected text with preserve_attributes flag 1');
+  });
+
+  suite.test('Inline element on selected text with preserve_attributes flag 2', function (editor) {
+    editor.focus();
+    editor.formatter.register('format', { inline: 'span', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
+    editor.getBody().innerHTML = '<p><span class="abc" style="color: red;" data-test="1">1234</span></p>';
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    editor.selection.setRng(rng);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(getContent(editor), '<p><span style="color: red;" class="abc">1234</span></p>', 'Inline element on selected text with preserve_attributes flag 2');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
