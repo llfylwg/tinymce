@@ -1,11 +1,11 @@
+import { Arr, Fun } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import * as Dockables from './Dockables';
-import { DockingConfig, DockingState } from './DockingTypes';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { Arr, Fun } from '@ephox/katamari';
+import * as Dockables from './Dockables';
+import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
   Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element(), prop));
@@ -106,4 +106,8 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
 
 const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
 
-export { refresh, reset, isDocked };
+const setModes = (component: AlloyComponent, config: DockingConfig, state: DockingState, modes: DockingMode[]) => state.setModes(modes);
+
+const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.getModes();
+
+export { refresh, reset, isDocked, getModes, setModes };

@@ -1,6 +1,6 @@
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Option, Obj, Adt } from '@ephox/katamari';
-import { Class, Css, Element, Height, Width, Body } from '@ephox/sugar';
+import { Adt, Arr, Obj, Option } from '@ephox/katamari';
+import { Body, Class, Css, Element, Height, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -118,12 +118,12 @@ const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: 
 
 const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<MorphAdt> =>
   getPrior(elem, state)
-    .filter((box) => isVisibleForModes(dockInfo.modes, box, viewport))
+    .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
 
 const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<MorphAdt> => {
   const box = Boxes.box(elem);
-  if (!isVisibleForModes(dockInfo.modes, box, viewport)) {
+  if (!isVisibleForModes(state.getModes(), box, viewport)) {
     storePrior(elem, box, state);
 
     // Calculate the fixed position
